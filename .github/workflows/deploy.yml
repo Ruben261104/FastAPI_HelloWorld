@@ -40,3 +40,5 @@ jobs:
       # Étape 6 : Suppression des fichiers SSH
       - name: Clean SSH Key
         run: rm -rf ~/.ssh
+
+        # Étape 7 : Afficher le statut de la dernière commande
