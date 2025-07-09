@@ -37,6 +37,6 @@ jobs:
             docker-compose build
             docker-compose up -d 
           EOF
-      # Étape 6 : Suppression des fichiers SSH
+      ## Étape 6 : Suppression des fichiers SSH
       - name: Clean SSH Key
         run: rm -rf ~/.ssh
