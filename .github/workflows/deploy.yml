@@ -21,7 +21,7 @@ jobs:
           PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo ${{ secrets.SSH_PRIVATE_KEY }} > ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
       
 
@@ -37,6 +37,6 @@ jobs:
             docker-compose build
             docker-compose up -d 
           EOF
-      ## Étape 6 : Suppression des fichiers SSH
+      # Étape 6 : Suppression des fichiers SSH
       - name: Clean SSH Key
         run: rm -rf ~/.ssh
