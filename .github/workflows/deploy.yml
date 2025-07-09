@@ -1,0 +1,42 @@
+name: Detect Push on Main
+
+#Déclencheur pour les événements "push" sur la branche "main"
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1 : Vérification du code source
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Étape 4 : Ajout de la clé privée pour la connexion SSH
+      - name: Setup SSH Key
+        env:
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+      
+
+      # Étape 5 : Se connecter via SSH et effectuer les commandes
+      - name: SSH and deploy
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+            cd ${{ secrets.WORK_DIR }}
+            git checkout main
+            git pull origin main
+            docker-compose down
+            docker system prune -af
+            docker-compose build
+            docker-compose up -d 
+          EOF
+      # Étape 6 : Suppression des fichiers SSH
+      - name: Clean SSH Key
+        run: rm -rf ~/.ssh
